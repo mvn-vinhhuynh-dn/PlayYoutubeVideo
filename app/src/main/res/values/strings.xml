@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">frameFragment</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="textview.text.demo_view">Demo View</string>
+    <string name="textview.text.home">Home</string>
+    <string name="textview.text.like">Like</string>
+    <string name="textview.text.setting">Setting</string>
+    <string name="textview.text.timer">Timer</string>
+    <string name="action_search">Home</string>
+    <string name="action_location_found">Like</string>
+    <string name="action_refresh">Timer</string>
+    <string name="action_help">Setting</string>
+    <string name="textview.text.demo_title">5S online tap 10</string>
+    <string name="url_topnew">https://www.googleapis.com/youtube/v3</string>
+    <string name="textview.description">Media Controls</string>
+</resources>

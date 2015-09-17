@@ -6,12 +6,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
+import com.example.asiantech.playyoutubevideo.PlayVideoActivity_;
 import com.example.asiantech.playyoutubevideo.R;
 import com.example.asiantech.playyoutubevideo.adapter.CustomVideoHome;
 import com.example.asiantech.playyoutubevideo.core.Callback;
 import com.example.asiantech.playyoutubevideo.core.api.AuthApi;
-import com.example.asiantech.playyoutubevideo.dialog.DialogPlayVideo;
-import com.example.asiantech.playyoutubevideo.dialog.DialogPlayVideo_;
 import com.example.asiantech.playyoutubevideo.object.Items;
 
 import org.androidannotations.annotations.AfterViews;
@@ -40,7 +39,7 @@ public class HomeFragment extends Fragment implements CustomVideoHome.OnPlayYtbV
     private ProgressDialog mProgressDialog;
     public static final String PLAYLIST_KEY = "PLdYSWqTrWP2jyqWIdjsATbrb11uN_BMrF";
     public static final String API_KEY = "AIzaSyBtEYk0NLi1DcEjYx8Z1TDDWulmmTajV4s";
-    public static final int MAX_ITEMS = 41 ;
+    public static final int MAX_ITEMS = 41;
     public static final String ITEM_TYPE = "video";
     public static final String API_SNIPPET = "snippet";
 
@@ -86,10 +85,15 @@ public class HomeFragment extends Fragment implements CustomVideoHome.OnPlayYtbV
 
     @Override
     public void OnPlayVideo(String videoId, int position, String urlImageThumb) {
-        DialogPlayVideo dialogReviewImage = DialogPlayVideo_.builder()
-                .ytbVideoId(videoId)
-                .ytbVideoThumb(urlImageThumb)
-                .build();
-        dialogReviewImage.show(getFragmentManager(), "DialogShowVideo");
+//        DialogPlayVideo dialogReviewImage = DialogPlayVideo_.builder()
+//                .ytbVideoId(videoId)
+//                .ytbVideoThumb(urlImageThumb)
+//                .build();
+//        dialogReviewImage.show(getFragmentManager(), "DialogShowVideo");
+        PlayVideoActivity_.intent(getActivity())
+                .extra("Video_ID", videoId)
+                .extra("Video_Thumbs", urlImageThumb)
+                .start();
+        getActivity().overridePendingTransition(R.anim.right_to_left, R.anim.left_to_right);
     }
 }

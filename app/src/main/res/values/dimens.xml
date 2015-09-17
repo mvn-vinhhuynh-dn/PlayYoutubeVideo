@@ -6,4 +6,12 @@
     <dimen name="videoview.size.height">150dp</dimen>
     <dimen name="item_video.videoViewYoutube.margin_top">10dp</dimen>
     <dimen name="item_video.llItemVideo_padding">20dp</dimen>
+
+
+    <dimen name="top_fragment_height">200dip</dimen>
+    <dimen name="top_fragment_margin">10dip</dimen>
+    <item name="x_scale_factor" format="float" type="dimen">2.3</item>
+    <item name="y_scale_factor" format="float" type="dimen">2.3</item>
+
+
 </resources>

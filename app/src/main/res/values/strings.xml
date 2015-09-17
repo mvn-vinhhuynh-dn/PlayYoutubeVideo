@@ -15,4 +15,5 @@
     <string name="textview.text.demo_title">5S online tap 10</string>
     <string name="url_topnew">https://www.googleapis.com/youtube/v3</string>
     <string name="textview.description">Media Controls</string>
+    <string name="acvitity.tv.text">Videos related...</string>
 </resources>

@@ -1,23 +1,30 @@
-package com.example.asiantech.playyoutubevideo.dialog;
+package com.example.asiantech.playyoutubevideo;
 
-
-import android.app.DialogFragment;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-import com.example.asiantech.playyoutubevideo.R;
+import com.example.asiantech.playyoutubevideo.adapter.RelatedVideoAdapter;
+import com.example.asiantech.playyoutubevideo.adapter.RelatedVideoAdapter.OnPlayYtbViDeo;
+import com.example.asiantech.playyoutubevideo.core.Callback;
+import com.example.asiantech.playyoutubevideo.core.api.AuthApi;
 import com.example.asiantech.playyoutubevideo.mediaPlayerCustomView.VideoControllerView;
+import com.example.asiantech.playyoutubevideo.object.Video;
+import com.github.pedrovgs.DraggableView;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -37,19 +44,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import retrofit.RetrofitError;
 
 /**
  * Copyright © 2015 AsianTech inc.
- * Created by VinhHlb on 9/11/15.
+ * Created by VinhHlb on 9/17/15.
  */
 
-@EFragment(R.layout.dialog_playvideo)
-public class DialogPlayVideo extends DialogFragment implements VideoControllerView.MediaPlayerControl {
-
-    @FragmentArg
-    String ytbVideoId;
-    @FragmentArg
-    String ytbVideoThumb;
+@EActivity(R.layout.acitivty_viewvideo)
+public class PlayVideoActivity extends Activity implements VideoControllerView.MediaPlayerControl, OnPlayYtbViDeo {
+    @ViewById(R.id.recyclerVideoRelated)
+    RecyclerView mRecycleView;
 
     @ViewById(R.id.video_detail)
     VideoView mVideoView;
@@ -59,7 +64,11 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
 
     @ViewById(R.id.videoLoading)
     View mProgressBar;
-
+    @Extra("Video_ID")
+    String ytbVideoId;
+    @Extra("Video_Thumbs")
+    String ytbVideoThumb;
+    private LinearLayoutManager linearLayoutManager;
     private static final float DOUBLE_SPEED = 1.4f;
     private ArrayList<String> mUrls = new ArrayList<>();
     private final String BASE_URL = "http://keepvid.com/?url=https://www.youtube.com/watch?v=";
@@ -67,24 +76,28 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
     private int mVideoDuration;
     private int mVideoPosition;
     private Drawable mDrawable = null;
+    private RelatedVideoAdapter mAdapter;
+    private ArrayList<Video.ItemsEntity> mDatas = new ArrayList<>();
+    private ProgressDialog mProgress;
+
+    private static final int MAX_RESULT = 30;
+    private static final String TYPE = "video";
+    private static final String API_KEY = "AIzaSyBtEYk0NLi1DcEjYx8Z1TDDWulmmTajV4s";
+    private static final String PART = "snippet";
 
     @AfterViews
     void afterView() {
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getDialog().setCanceledOnTouchOutside(false);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         setValue();
+        configRecycleView();
         initMedia();
+        setAdapter();
         getHTMLCode(BASE_URL + ytbVideoId);
         new LoadBackground(ytbVideoThumb, "ThumbImage").execute();
     }
 
-    public void getHTMLCode(String url) {
-        //Request to get HTML code
-        new GetBaseUrl().execute(url);
-    }
-
     private void setValue() {
-        mController = new VideoControllerView(getActivity(), false);
+        mController = new VideoControllerView(this, false);
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer arg0) {
@@ -94,8 +107,6 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
 
     private void initMedia() {
         mVideoView.setOnPreparedListener(mOnPreparedListener);
-
-
     }
 
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
@@ -104,7 +115,7 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
             mVideoDuration = 0;
             mVideoDuration = mVideoView.getDuration();
             mProgressBar.setVisibility(View.GONE);
-            mController.setMediaPlayer(DialogPlayVideo.this);
+            mController.setMediaPlayer(PlayVideoActivity.this);
             mController.setAnchorView(mVideoFrame);
             if (mDrawable != null)
                 mController.setBackgroundDrawable(mDrawable);
@@ -113,7 +124,8 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
         }
     };
 
-    class GetBaseUrl extends AsyncTask<String, String, String> {
+
+    class RequestTask extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -164,6 +176,7 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
                 }
                 mVideoView.setVideoPath(mUrls.get(0));
             }
+            getRelatedVideo();
         }
     }
 
@@ -216,9 +229,9 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
     @Override
     public void fullScreenToggle() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            PlayVideoActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            PlayVideoActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 
@@ -283,5 +296,63 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
             super.onPostExecute(result);
             mDrawable = result;
         }
+    }
+
+    //config recycleView
+    private void configRecycleView() {
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecycleView.setLayoutManager(linearLayoutManager);
+    }
+
+    private void setAdapter() {
+        mAdapter = new RelatedVideoAdapter(PlayVideoActivity.this, mDatas, this);
+        mRecycleView.setAdapter(mAdapter);
+    }
+
+    private void getRelatedVideo() {
+        if (mDatas != null)
+            mDatas.clear();
+        mProgress = new ProgressDialog(PlayVideoActivity.this);
+        mProgress.setMessage("Loading...");
+        mProgress.show();
+        AuthApi.getRelatedVideo(PART, MAX_RESULT, ytbVideoId, TYPE, API_KEY, new Callback<Video>() {
+            @Override
+            public void success(Video items) {
+                for (int i = 0; i < items.getItems().size(); i++) {
+                    mDatas.add(items.getItems().get(i));
+                }
+                mAdapter.notifyDataSetChanged();
+                mProgress.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error, Error myError) {
+                mProgress.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void OnPlayVideo(String videoId, int position, String urlImageThumb) {
+        if (mVideoView != null) {
+            mVideoView.pause();
+            mVideoView.stopPlayback();
+            mVideoView.setBackgroundDrawable(null);
+            new LoadBackground(urlImageThumb, "ThumbImage").execute();
+
+            getHTMLCode(BASE_URL + videoId);
+
+        }
+    }
+
+    public void getHTMLCode(String url) {
+        //Request to get HTML code
+        new RequestTask().execute(url);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

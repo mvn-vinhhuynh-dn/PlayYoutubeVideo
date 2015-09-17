@@ -27,8 +27,10 @@ public class Items {
     private String etag;
     @SerializedName("nextPageToken")
     private String nextPageToken;
+
     @SerializedName("pageInfo")
     private PageInfoEntity pageInfo;
+
     @SerializedName("items")
     private List<ItemsEntity> items;
 
@@ -40,6 +42,7 @@ public class Items {
          */
         @SerializedName("totalResults")
         private int totalResults;
+
         @SerializedName("resultsPerPage")
         private int resultsPerPage;
     }
@@ -77,12 +80,18 @@ public class Items {
             private String channelId;
             private String title;
             private String description;
+
+            @SerializedName("thumbnails")
             private ThumbnailsEntity thumbnails;
+
             @SerializedName("channelTitle")
             private String channelTitle;
+
             @SerializedName("playlistId")
             private String playlistId;
+
             private int position;
+
             @SerializedName("resourceId")
             private resourceId resourceId;
 
@@ -98,7 +107,9 @@ public class Items {
 
                 @SerializedName("default")
                 private DefaultEntity defaultX;
+                @SerializedName("medium")
                 private MediumEntity medium;
+
                 private HighEntity high;
                 private StandardEntity standard;
                 private MaxresEntity maxres;

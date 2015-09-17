@@ -117,7 +117,8 @@ public class VideoControllerView extends FrameLayout implements View.OnClickList
 
     /**
      * Create the view that holds the widgets that control playback.
-     * Derived classes can override this to create their own.
+
+      * Derived classes can override this to create their own.
      *
      * @return The controller view.
      * @hide This doesn't work as advertised

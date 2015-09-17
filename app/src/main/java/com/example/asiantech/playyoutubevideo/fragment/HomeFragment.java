@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment implements CustomVideoHome.OnPlayYtbV
     private ProgressDialog mProgressDialog;
     public static final String PLAYLIST_KEY = "PLdYSWqTrWP2jyqWIdjsATbrb11uN_BMrF";
     public static final String API_KEY = "AIzaSyBtEYk0NLi1DcEjYx8Z1TDDWulmmTajV4s";
-    public static final int MAX_ITEMS = 40;
+    public static final int MAX_ITEMS = 41 ;
     public static final String ITEM_TYPE = "video";
     public static final String API_SNIPPET = "snippet";
 

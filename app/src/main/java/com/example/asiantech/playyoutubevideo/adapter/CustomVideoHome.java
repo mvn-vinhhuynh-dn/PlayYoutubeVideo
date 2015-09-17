@@ -53,12 +53,14 @@ public class CustomVideoHome extends RecyclerView.Adapter implements View.OnClic
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof VideoViewHolder) {
             Items.ItemsEntity items = mItems.get(position);
-            ((VideoViewHolder) holder).tvTitle.setText(items.getSnippet().getTitle());
-            mImageLoader.displayImage(items.getSnippet().getThumbnails().getMedium().getUrl(),
-                    ((VideoViewHolder) holder).imgAvatar, mOptions);
-            ((VideoViewHolder) holder).imgAvatar.setOnClickListener(this);
-            ((VideoViewHolder) holder).imgAvatar.setTag(position);
-//            Log.d("vinh1111","\n" + items.getSnippet().getResourceId().getVideoId());
+            if (!items.getSnippet().getTitle().equals("Deleted video")) {
+                ((VideoViewHolder) holder).tvTitle.setText(items.getSnippet().getTitle());
+                mImageLoader.displayImage(items.getSnippet().getThumbnails().getMedium().getUrl(),
+                        ((VideoViewHolder) holder).imgAvatar, mOptions);
+
+                ((VideoViewHolder) holder).imgAvatar.setOnClickListener(this);
+                ((VideoViewHolder) holder).imgAvatar.setTag(position);
+            }
         }
 
     }

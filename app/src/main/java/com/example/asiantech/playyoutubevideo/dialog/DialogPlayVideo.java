@@ -56,8 +56,9 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
 
     @ViewById(R.id.layout_video_frame)
     RelativeLayout mVideoFrame;
+
     @ViewById(R.id.videoLoading)
-    protected View mProgressBar;
+    View mProgressBar;
 
     private static final float DOUBLE_SPEED = 1.4f;
     private ArrayList<String> mUrls = new ArrayList<>();
@@ -108,7 +109,7 @@ public class DialogPlayVideo extends DialogFragment implements VideoControllerVi
             if (mDrawable != null)
                 mController.setBackgroundDrawable(mDrawable);
             mController.show();
-            mVideoView.seekTo(mVideoPosition);
+//            mVideoView.seekTo(mVideoPosition);
         }
     };
 

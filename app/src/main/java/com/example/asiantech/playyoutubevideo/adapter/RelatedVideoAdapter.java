@@ -71,7 +71,7 @@ public class RelatedVideoAdapter extends RecyclerView.Adapter<RelatedVideoAdapte
         switch (v.getId()) {
             case R.id.mLnParent:
                 int pos = (Integer) v.getTag();
-                mListener.OnPlayVideo(mItems.get(pos).getId().getVideoId(), pos, mItems.get(pos).getSnippet().getThumbnails().getHigh().getUrl());
+                mListener.OnPlayYtbViDeoOutSize(mItems.get(pos).getId().getVideoId(), pos, mItems.get(pos).getSnippet().getThumbnails().getHigh().getUrl());
                 break;
         }
     }
@@ -92,6 +92,6 @@ public class RelatedVideoAdapter extends RecyclerView.Adapter<RelatedVideoAdapte
     }
 
     public interface OnPlayYtbViDeo {
-        void OnPlayVideo(String videoId, int position, String urlImageThumb);
+        void OnPlayYtbViDeoOutSize(String videoId, int position, String urlImageThumb);
     }
 }

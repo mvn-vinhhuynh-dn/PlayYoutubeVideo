@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recyclerViewVideo"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recyclerViewVideo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.github.pedrovgs.DraggableView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/draggable_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/black"
+        draggable_view:bottom_view_id="@+id/recyclerVideoRelated"
+        draggable_view:enable_minimized_horizontal_alpha_effect="false"
+        draggable_view:top_view_height="@dimen/top_fragment_height"
+        draggable_view:top_view_id="@+id/layout_video_frame"
+        draggable_view:top_view_margin_bottom="@dimen/top_fragment_margin"
+        draggable_view:top_view_margin_right="@dimen/top_fragment_margin"
+        draggable_view:top_view_resize="true"
+        draggable_view:top_view_x_scale_factor="@dimen/x_scale_factor"
+        draggable_view:top_view_y_scale_factor="@dimen/y_scale_factor">
+
+            <RelativeLayout
+                android:id="@+id/layout_video_frame"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:background="#000">
+
+                <VideoView
+                    android:id="@+id/video_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true" />
+
+                <RelativeLayout
+                    android:id="@+id/videoLoading"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#000">
+
+                    <ProgressBar
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_below="@+id/layout_video_frame"
+            android:id="@+id/recyclerVideoRelated"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.github.pedrovgs.DraggableView>
+</FrameLayout>
